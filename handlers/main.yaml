@@ -1,0 +1,7 @@
+---
+
+- name: Restart PostgreSQL server
+  service:
+    name: postgresql
+    state: restarted
+  when: not postgresql_service_started.changed

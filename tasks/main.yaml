@@ -1,0 +1,106 @@
+---
+
+- name: Add EPEL YUM repo
+  yumrepo:
+    name: epel
+    description: EPEL YUM repo
+    baseurl: "{{ zabbix_server_epel_yumrepo_url }}"
+    gpgcheck: no
+  when: zabbix_server_install_epel
+  tags:
+    - postgresql_pkg
+
+- name: Install PostgreSQL server
+  yum:
+    name: "{{ postgresql_pkg }}"
+    state: present
+  notify:
+    - Restart PostgreSQL server
+  tags:
+    - postgresql_pkg
+
+- name: Check if it needs initialization
+  shell: test -f {{ postgresql_data_directory }}/PG_VERSION
+  register: postgresql_needs_init
+  changed_when: false
+  failed_when: false
+  tags:
+    - postgresql_config
+
+- name: Initialize the cluster
+  shell: service postgresql initdb
+  environment:
+    PGDATA: "{{ postgresql_data_directory }}"
+  when: postgresql_needs_init.rc
+  tags:
+    - postgresql_config
+
+- name: Configure PostgreSQL server
+  template:
+    src: postgresql.conf.j2
+    dest: "{{ postgresql_config_file }}"
+  notify:
+    - Restart PostgreSQL server
+  tags:
+    - postgresql_config
+
+- name: Configure PostgreSQL server HBA
+  template:
+    src: pg_hba.conf.j2
+    dest: "{{ postgresql_hba_config_file }}"
+  notify:
+    - Restart PostgreSQL server
+  tags:
+    - postgresql_config
+
+- name: Configure PostgreSQL server ident
+  template:
+    src: pg_ident.conf.j2
+    dest: "{{ postgresql_ident_config_file }}"
+  notify:
+    - Restart PostgreSQL server
+  tags:
+    - postgresql_config
+
+- name: Configure PostgreSQL server service
+  template:
+    src: pg_service.conf.j2
+    dest: "{{ postgresql_service_config_file }}"
+  notify:
+    - Restart PostgreSQL server
+  tags:
+    - postgresql_config
+
+- name: Configure PostgreSQL server recovery
+  template:
+    src: recovery.conf.j2
+    dest: "{{ postgresql_recovery_config_file }}"
+  when: postgresql_recovery_config | length > 0
+  notify:
+    - Restart PostgreSQL server
+  tags:
+    - postgresql_config
+
+- name: Make sure the service is enabled
+  service:
+    name: postgresql
+    enabled: yes
+  tags:
+    - postgresql_config
+
+- name: Make sure the service is running
+  service:
+    name: postgresql
+    state: started
+  register: postgresql_service_started
+  tags:
+    - postgresql_config
+    - postgresql_pkg
+
+- name: Set DB password for postgres user
+  command: psql -c "ALTER USER Postgres WITH PASSWORD '{{ postgresql_postgres_password }}'"
+  sudo: yes
+  sudo_user: postgres
+  when: postgresql_needs_init.rc
+  tags:
+    - postgresql_config

@@ -1,0 +1,128 @@
+---
+
+# Package to be installed (you can specify exact version here)
+postgresql_pkg: postgresql-server
+
+# Default DB password for the postgres user
+postgresql_postgres_password: postgres
+
+# Default data directory location
+postgresql_data_directory: /var/lib/pgsql/data
+
+
+# PostgreSQL HBA config file location
+postgresql_hba_config_file: "{{ postgresql_data_directory }}/pg_hba.conf"
+
+# Default PostgreSQL HBA config
+postgresql_hba_config__default:
+  - type: local
+    database: all
+    user: all
+    method: trust
+  - type: host
+    database: all
+    user: all
+    address: 127.0.0.1
+    netmask: 255.255.255.255
+    method: trust
+  - type: host
+    database: all
+    user: all
+    address: ::1/128
+    method: trust
+
+# Custom PostgreSQL HBA config
+postgresql_hba_config__custom: []
+
+# Final PostgreSQL HBA config
+postgresql_hba_config: "{{
+    postgresql_hba_config__default +
+    postgresql_hba_config__custom
+  }}"
+
+
+# PostgreSQL ident config file location
+postgresql_ident_config_file: "{{ postgresql_data_directory }}/pg_ident.conf"
+
+# PostgreSQL ident config
+postgresql_ident_config: []
+# Example:
+#postgresql_ident_config:
+#  - mapname: some_user
+#    system: some_system_user
+#    pg: some_db_user
+
+
+# PostgreSQL service config file location
+postgresql_service_config_file: "{{ postgresql_data_directory }}/pg_service.conf"
+
+# PostgreSQL service config
+postgresql_service_config: {}
+# Example:
+#postgresql_service_config:
+#  postgres:
+#    dbname: postgres
+#    user: postgres
+
+
+# PostgreSQL server config file location
+postgresql_config_file: "{{ postgresql_data_directory }}/postgresql.conf"
+
+# Default PostgreSQL server config options
+postgresql_config_max_connections: 100
+postgresql_config_shared_buffers: 32MB
+postgresql_config_logging_collector: 'on'
+postgresql_config_log_directory: pg_log
+postgresql_config_log_filename: postgresql-%a.log
+postgresql_config_log_truncate_on_rotation: 'on'
+postgresql_config_log_rotation_age: 1d
+postgresql_config_log_rotation_size: 0
+postgresql_config_datestyle: iso, mdy
+postgresql_config_lc_messages: en_US.UTF-8
+postgresql_config_lc_monetary: en_US.UTF-8
+postgresql_config_lc_numeric: en_US.UTF-8
+postgresql_config_lc_time: en_US.UTF-8
+postgresql_config_default_text_search_config: pg_catalog.english
+
+# Default PostgreSQL server config
+postgresql_config__default:
+  data_directory: "{{ postgresql_data_directory }}"
+  max_connections: "{{ postgresql_config_max_connections }}"
+  shared_buffers: "{{ postgresql_config_shared_buffers }}"
+  logging_collector: "{{ postgresql_config_logging_collector }}"
+  log_directory: "{{ postgresql_config_log_directory }}"
+  log_filename: "{{ postgresql_config_log_filename }}"
+  log_truncate_on_rotation: "{{ postgresql_config_log_truncate_on_rotation }}"
+  log_rotation_age: "{{ postgresql_config_log_rotation_age }}"
+  log_rotation_size: "{{ postgresql_config_log_rotation_size }}"
+  datestyle: "{{ postgresql_config_datestyle }}"
+  lc_messages: "{{ postgresql_config_lc_messages }}"
+  lc_monetary: "{{ postgresql_config_lc_monetary }}"
+  lc_numeric: "{{ postgresql_config_lc_numeric }}"
+  lc_time: "{{ postgresql_config_lc_time }}"
+  default_text_search_config: "{{ postgresql_config_default_text_search_config }}"
+
+# Custom PostgreSQL server config
+postgresql_config__custom: {}
+
+postgresql_config__tmp: {}
+
+# Finale PostgreSQL server config
+postgresql_config: "{{
+  postgresql_config__tmp.update(
+  postgresql_config__default) }}{{
+  postgresql_config__tmp.update(
+  postgresql_config__custom) }}{{
+  postgresql_config__tmp }}"
+
+
+# PostgreSQL recovery config file location
+postgresql_recovery_config_file: "{{ postgresql_data_directory }}/recovery.conf"
+
+# PostgreSQL recovery config
+postgresql_recovery_config: {}
+# Example:
+#postgresql_recovery_config:
+#  recovery_target_time: 2004-07-14 22:39:00 EST
+#  recovery_target_xid: 1100842
+#  recovery_target_inclusive: 'true'
