@@ -4,9 +4,9 @@
   yumrepo:
     name: epel
     description: EPEL YUM repo
-    baseurl: "{{ zabbix_server_epel_yumrepo_url }}"
+    baseurl: "{{ postgresql_epel_yumrepo_url }}"
     gpgcheck: no
-  when: zabbix_server_install_epel
+  when: postgresql_epel_install
   tags:
     - postgresql_pkg
 
