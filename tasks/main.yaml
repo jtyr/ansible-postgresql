@@ -1,7 +1,7 @@
 ---
 
 - name: Add EPEL YUM repo
-  yumrepo:
+  yum_repository:
     name: epel
     description: EPEL YUM repo
     baseurl: "{{ postgresql_epel_yumrepo_url }}"
