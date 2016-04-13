@@ -99,8 +99,8 @@
 
 - name: Set DB password for postgres user
   command: psql -c "ALTER USER Postgres WITH PASSWORD '{{ postgresql_postgres_password }}'"
-  sudo: yes
-  sudo_user: postgres
+  become: yes
+  become_user: postgres
   when: postgresql_needs_init.rc
   tags:
     - postgresql_config
