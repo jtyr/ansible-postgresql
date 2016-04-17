@@ -4,4 +4,6 @@
   service:
     name: postgresql
     state: restarted
-  when: not postgresql_service_started.changed
+  when: >
+    postgresql_service_started is not defined or
+    not postgresql_service_started.changed
