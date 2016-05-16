@@ -1,10 +1,13 @@
 ---
 
-# Whether to install EPEL YUM repo
-postgresql_epel_install: yes
+# Whether to install YUM repo
+postgresql_yumrepo_install: yes
 
-# EPEL YUM repo URL
-postgresql_epel_yumrepo_url: "{{ yumrepo_epel_url | default('https://dl.fedoraproject.org/pub/epel/' + ansible_distribution_major_version + '/' + ansible_userspace_architecture + '/') }}"
+# YUM repo version
+postgresql_yumrepo_version: 9.5
+
+# YUM repo URL
+postgresql_yumrepo_url: "{{ 'https://download.postgresql.org/pub/repos/yum/' + postgresql_yumrepo_version | string + '/redhat/rhel-$releasever-$basearch/' }}"
 
 # Package to be installed (you can specify exact version here)
 postgresql_pkg: postgresql-server

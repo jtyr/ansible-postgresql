@@ -140,6 +140,15 @@ Role variables
 --------------
 
 ```
+# Whether to install YUM repo
+postgresql_yumrepo_install: yes
+
+# YUM repo version
+postgresql_yumrepo_version: 9.4
+
+# YUM repo URL
+postgresql_yumrepo_url: "{{ 'https://download.postgresql.org/pub/repos/yum/' + postgresql_yumrepo_version + '/redhat/rhel-$releasever-$basearch/' }}"
+
 # Package to be installed (you can specify exact version here)
 postgresql_pkg: postgresql-server
 
@@ -223,6 +232,7 @@ postgresql_config_lc_monetary: en_US.UTF-8
 postgresql_config_lc_numeric: en_US.UTF-8
 postgresql_config_lc_time: en_US.UTF-8
 postgresql_config_default_text_search_config: pg_catalog.english
+postgresql_config_listen_addresses: 127.0.0.1
 
 # Default PostgreSQL server config
 postgresql_config__default:
@@ -241,6 +251,7 @@ postgresql_config__default:
   lc_numeric: "{{ postgresql_config_lc_numeric }}"
   lc_time: "{{ postgresql_config_lc_time }}"
   default_text_search_config: "{{ postgresql_config_default_text_search_config }}"
+  listen_addresses: "{{ postgresql_config_listen_addresses }}"
 
 # Custom PostgreSQL server config
 postgresql_config__custom: {}
