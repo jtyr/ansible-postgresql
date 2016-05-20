@@ -124,16 +124,15 @@ Usage
 ```
 
 This role requires [Config
-Encoders](https://github.com/jtyr/ansible/blob/jtyr-config_encoders/lib/ansible/plugins/filter/config_encoders.py)
-which must be configured in the `ansible.cfg` file like this:
+Encoders](https://github.com/jtyr/ansible/blob/jtyr-config_encoders/lib/ansible/plugins/filter/config_encoders.py).
+Download the file and put it into the `filter_plugins` directory in the root of
+your playbook:
 
 ```
-[defaults]
-
-filter_plugins = ./plugins/filter/
+$ mkdir ./filter_plugins
+$ cd ./filter_plugins
+$ curl -O https://github.com/jtyr/ansible/blob/jtyr-config_encoders/lib/ansible/plugins/filter/config_encoders.py
 ```
-
-Where the `./plugins/filter/` containes the `config_encoders.py` file.
 
 
 Role variables
