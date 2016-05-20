@@ -27,7 +27,7 @@
   tags:
     - postgresql_config
 
-- name: Initialize the cluster
+- name: Initialize the DB
   shell: service postgresql initdb
   environment:
     PGDATA: "{{ postgresql_data_directory }}"
