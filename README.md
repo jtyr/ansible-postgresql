@@ -123,17 +123,6 @@ Usage
           recovery_target_inclusive: 'true'
 ```
 
-This role requires [Config
-Encoders](https://github.com/jtyr/ansible/blob/jtyr-config_encoders/lib/ansible/plugins/filter/config_encoders.py).
-Download the file and put it into the `filter_plugins` directory in the root of
-your playbook:
-
-```
-$ mkdir ./filter_plugins
-$ cd ./filter_plugins
-$ curl -O https://github.com/jtyr/ansible/blob/jtyr-config_encoders/lib/ansible/plugins/filter/config_encoders.py
-```
-
 
 Role variables
 --------------
@@ -282,7 +271,7 @@ postgresql_recovery_config: {}
 Dependencies
 ------------
 
-- [Config Encoders](https://github.com/jtyr/ansible/blob/jtyr-config_encoders/lib/ansible/plugins/filter/config_encoders.py)
+- [`config_encoder_filters`](https://github.com/jtyr/ansible-config_encoder_filters)
 
 
 License
