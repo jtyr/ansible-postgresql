@@ -5,7 +5,8 @@
     name: postgresql
     description: PostgreSQL YUM repo
     baseurl: "{{ postgresql_yumrepo_url }}"
-    gpgcheck: no
+    gpgkey: "{{ postgresql_yumrepo_gpgkey }}"
+    params: "{{ postgresql_yumrepo_params }}"
   when: postgresql_yumrepo_install
   tags:
     - postgresql_pkg

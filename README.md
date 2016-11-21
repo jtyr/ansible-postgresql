@@ -137,6 +137,12 @@ postgresql_yumrepo_version: 9.4
 # YUM repo URL
 postgresql_yumrepo_url: "{{ 'https://download.postgresql.org/pub/repos/yum/' + postgresql_yumrepo_version + '/redhat/rhel-$releasever-$basearch/' }}"
 
+# YUM repo GPG key
+postgresql_yumrepo_gpgkey: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+
+# Additional YUM repo params
+postgresql_yumrepo_params: {}
+
 # Package to be installed (you can specify exact version here)
 postgresql_pkg: postgresql-server
 
