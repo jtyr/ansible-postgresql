@@ -25,102 +25,102 @@ Usage
 # Do some changes of the default server configuration (postgresql.conf file)
 - name: Example 2
   hosts: machine2
+  vars:
+    # Change the default password for the postgres user
+    postgresql_postgres_password: T0Ps3cr3t
+    # Change the path for the data directory
+    postgresql_data_directory: /mnt/pg/data
+    # Change the server connection number
+    postgresql_config_max_connections: 200
   roles:
-    - role: postgresql
-      vars:
-        # Change the default password for the postgres user
-        postgresql_postgres_password: T0Ps3cr3t
-        # Change the path for the data directory
-        postgresql_data_directory: /mnt/pg/data
-        # Change the server connection number
-        postgresql_config_max_connections: 200
+    - postgresql
 
 # Add custom server configuration
 - name: Example 3
   hosts: machine3
+  vars:
+    postgresql_config__custom:
+      # Add configuration to change the authentication timeout down to
+      # 20 seconds
+      authentication_timeout: 20s
+      # Add configuration to increase the work memory to 10MB
+      work_mem: 10MB
   roles:
-    - role: postgresql
-      vars:
-        postgresql_config__custom:
-          # Add configuration to change the authentication timeout down to
-          # 20 seconds
-          authentication_timeout: 20s
-          # Add configuration to increase the work memory to 10MB
-          work_mem: 10MB
+    - postgresql
 
 # Write the server configuration from scratch
 - name: Example 4
   hosts: machine4
+  vars:
+    postgresql_config:
+      authentication_timeout: 20s
+      datestyle: iso, mdy
+      default_text_search_config: pg_catalog.english
+      lc_messages: en_US.UTF-8
+      lc_monetary: en_US.UTF-8
+      lc_numeric: en_US.UTF-8
+      lc_time: en_US.UTF-8
+      log_directory: pg_log
+      log_filename: postgresql-%a.log
+      logging_collector: 'on'
+      log_rotation_age: 1d
+      log_rotation_size: 0
+      log_truncate_on_rotation: 'on'
+      max_connections: 100
+      shared_buffers: 32MB
+      work_mem: 10MB
   roles:
-    - role: postgresql
-      vars:
-        postgresql_config:
-          authentication_timeout: 20s
-          datestyle: iso, mdy
-          default_text_search_config: pg_catalog.english
-          lc_messages: en_US.UTF-8
-          lc_monetary: en_US.UTF-8
-          lc_numeric: en_US.UTF-8
-          lc_time: en_US.UTF-8
-          log_directory: pg_log
-          log_filename: postgresql-%a.log
-          logging_collector: 'on'
-          log_rotation_age: 1d
-          log_rotation_size: 0
-          log_truncate_on_rotation: 'on'
-          max_connections: 100
-          shared_buffers: 32MB
-          work_mem: 10MB
+    - postgresql
 
 # Add IP from which we can connect to the server (pg_hba.conf file)
 - name: Example 5
   hosts: machine5
+  vars:
+    # Allow access for the app1_user to the app1_db from 10.1.2.3
+    postgresql_hba_config__custom:
+      - type: host
+        database: app1_db
+        user: app1_user
+        address: 10.1.2.3/32
+        method: md5
+    # Uncomment this to disable the by default configured local access
+    #postgresql_hba_config__default: []
   roles:
-    - role: postgresql
-      vars:
-        # Allow access for the app1_user to the app1_db from 10.1.2.3
-        postgresql_hba_config__custom:
-          - type: host
-            database: app1_db
-            user: app1_user
-            address: 10.1.2.3/32
-            method: md5
-        # Uncomment this to disable the by default configured local access
-        #postgresql_hba_config__default: []
+    - postgresql
 
 # Configure ident (system to db user linking - pg_ident.conf file)
 - name: Example 6
   hosts: machine6
+  vars:
+    postgresql_ident_config:
+      # Map some_system_user to some_db_user
+      - mapname: some_user
+        system: some_system_user
+        pg: some_db_user
   roles:
-    - role: postgresql
-      vars:
-        postgresql_ident_config:
-          # Map some_system_user to some_db_user
-          - mapname: some_user
-            system: some_system_user
-            pg: some_db_user
+    - postgresql
 
 # Change the connection service settings (pg_service.conf file)
 - name: Example 7
   hosts: machine7
+  vars:
+    postgresql_service_config:
+      postgres:
+        dbname: postgres
+        user: postgres
   roles:
-    - role: postgresql
-      vars:
-        postgresql_service_config:
-          postgres:
-            dbname: postgres
-            user: postgres
+    - postgresql
 
 # Change the recovery service setting (recovery.conf file)
 - name: Example 8
   hosts: machine8
+  vars:
+    postgresql_recovery_config:
+      recovery_target_time: 2004-07-14 22:39:00 EST
+      recovery_target_xid: 1100842
+      recovery_target_inclusive: 'true'
   roles:
-    - role: postgresql
-      vars:
-        postgresql_recovery_config:
-          recovery_target_time: 2004-07-14 22:39:00 EST
-          recovery_target_xid: 1100842
-          recovery_target_inclusive: 'true'
+    - postgresql
 ```
 
 
