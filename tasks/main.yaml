@@ -29,7 +29,7 @@
     - postgresql_config
 
 - name: Initialize the DB
-  shell: service postgresql initdb
+  shell: env service postgresql initdb
   environment:
     PGDATA: "{{ postgresql_data_directory }}"
   when: postgresql_needs_init.rc
