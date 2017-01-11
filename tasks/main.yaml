@@ -12,9 +12,8 @@
     - postgresql_pkg
 
 - name: Install PostgreSQL server
-  yum:
+  package:
     name: "{{ postgresql_pkg }}"
-    state: present
   notify:
     - Restart PostgreSQL server
   tags:
