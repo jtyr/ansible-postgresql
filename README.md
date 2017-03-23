@@ -132,10 +132,13 @@ Role variables
 postgresql_yumrepo_install: yes
 
 # YUM repo version
-postgresql_yumrepo_version: 9.4
+postgresql_yumrepo_version: 9.6
+
+# Short version
+postgresql_yumrepo_ver: "{{ postgresql_yumrepo_version | regex_replace('\\.', '') }}"
 
 # YUM repo URL
-postgresql_yumrepo_url: "{{ 'https://download.postgresql.org/pub/repos/yum/' + postgresql_yumrepo_version + '/redhat/rhel-$releasever-$basearch/' }}"
+postgresql_yumrepo_url: "{{ 'https://download.postgresql.org/pub/repos/yum/' + postgresql_yumrepo_version | string + '/redhat/rhel-$releasever-$basearch/' }}"
 
 # YUM repo GPG key
 postgresql_yumrepo_gpgkey: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
@@ -144,13 +147,16 @@ postgresql_yumrepo_gpgkey: https://download.postgresql.org/pub/repos/yum/RPM-GPG
 postgresql_yumrepo_params: {}
 
 # Package to be installed (you can specify exact version here)
-postgresql_pkg: postgresql-server
+postgresql_pkg: postgresql{{ postgresql_yumrepo_ver }}-server
+
+# Service name
+postgresql_service: postgresql-{{ postgresql_yumrepo_version }}
 
 # Default DB password for the postgres user
 postgresql_postgres_password: postgres
 
 # Default data directory location
-postgresql_data_directory: /var/lib/pgsql/data
+postgresql_data_directory: /var/lib/pgsql/{{ postgresql_yumrepo_version }}/data
 
 
 # PostgreSQL HBA config file location

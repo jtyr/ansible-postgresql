@@ -2,7 +2,7 @@
 
 - name: Restart PostgreSQL server
   service:
-    name: postgresql
+    name: "{{ postgresql_service }}"
     state: restarted
   when: >
     postgresql_service_started is not defined or

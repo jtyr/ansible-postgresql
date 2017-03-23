@@ -27,11 +27,23 @@
   tags:
     - postgresql_config
 
-- name: Initialize the DB
-  shell: env service postgresql initdb
+- name: Initialize the DB with init.d
+  shell: env service postgresql-{{ postgresql_yumrepo_version }} initdb
   environment:
     PGDATA: "{{ postgresql_data_directory }}"
-  when: postgresql_needs_init.rc
+  when: >
+    postgresql_needs_init.rc and
+    ansible_distribution_major_version | int < 7
+  tags:
+    - postgresql_config
+
+- name: Initialize the DB with system.d
+  shell: /usr/pgsql-{{ postgresql_yumrepo_version }}/bin/postgresql{{ postgresql_yumrepo_ver }}-setup initdb
+  environment:
+    PGDATA: "{{ postgresql_data_directory }}"
+  when: >
+    postgresql_needs_init.rc and
+    ansible_distribution_major_version | int > 6
   tags:
     - postgresql_config
 
@@ -83,14 +95,14 @@
 
 - name: Make sure the service is enabled
   service:
-    name: postgresql
+    name: "{{ postgresql_service }}"
     enabled: yes
   tags:
     - postgresql_config
 
 - name: Make sure the service is running
   service:
-    name: postgresql
+    name: "{{ postgresql_service }}"
     state: started
   register: postgresql_service_started
   tags:
