@@ -7,7 +7,7 @@
     baseurl: "{{ postgresql_yumrepo_url }}"
     gpgkey: "{{ postgresql_yumrepo_gpgkey }}"
     params: "{{ postgresql_yumrepo_params }}"
-  when: postgresql_yumrepo_install
+  when: postgresql_yumrepo_install == true
   tags:
     - postgresql_pkg
 
@@ -32,7 +32,7 @@
   environment:
     PGDATA: "{{ postgresql_data_directory }}"
   when: >
-    postgresql_needs_init.rc and
+    postgresql_needs_init.rc > 0 and
     ansible_distribution_major_version | int < 7
   tags:
     - postgresql_config
@@ -42,7 +42,7 @@
   environment:
     PGDATA: "{{ postgresql_data_directory }}"
   when: >
-    postgresql_needs_init.rc and
+    postgresql_needs_init.rc > 0 and
     ansible_distribution_major_version | int > 6
   tags:
     - postgresql_config
@@ -113,6 +113,6 @@
   command: psql -c "ALTER USER Postgres WITH PASSWORD '{{ postgresql_postgres_password }}'"
   become: yes
   become_user: postgres
-  when: postgresql_needs_init.rc
+  when: postgresql_needs_init.rc > 0
   tags:
     - postgresql_config
