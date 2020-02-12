@@ -38,7 +38,7 @@
     - postgresql_config
 
 - name: Initialize the DB with system.d
-  shell: /usr/pgsql-{{ postgresql_yumrepo_version }}/bin/postgresql{{ postgresql_yumrepo_ver }}-setup initdb
+  shell: /usr/pgsql-{{ postgresql_yumrepo_version }}/bin/postgresql{{'-' if postgresql_yumrepo_ver | int >= 10 else '' }}{{ postgresql_yumrepo_ver }}-setup initdb
   environment:
     PGDATA: "{{ postgresql_data_directory }}"
   when: >
